@@ -5,6 +5,7 @@
   <title>Pusher Test</title>
 </head>
 <body>
+  <audio id="notification" src="../notification.mp3" preload="auto"></audio>
   <h1>Pusher Test</h1>
   <div id="app">
     <ul>
@@ -18,7 +19,7 @@
   <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
   <script>
     // Enable pusher logging - don't include this in production
-    Pusher.logToConsole = true;
+    Pusher.logToConsole = false;
 
     var pusher = new Pusher('b9fd36fe72d986cec08f', {
       cluster: 'us2'
@@ -27,12 +28,23 @@
     var channel = pusher.subscribe('my-channel');
     channel.bind('my-event', function(data) {
       app.messages.push(data.message);
+      app.play();
     });
 
     const app = new Vue({
       el: '#app',
       data: {
         messages: [],
+        audio: null
+      },
+      created() {
+        var audio = new Audio('../notification.mp3');
+        this.audio = audio;
+      },
+      methods: {
+        play() {
+          this.audio.play();   
+        }
       },
     });
   </script>
